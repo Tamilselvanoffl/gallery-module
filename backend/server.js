@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const uploadRoutes = require("./routes/uploadRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
 
 const app = express();
 
@@ -17,7 +17,8 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => {
   console.log("MongoDB connection failed");
-});*/
+});
+*/
 
 /* Test route */
 app.get("/", (req, res) => {
@@ -25,8 +26,8 @@ app.get("/", (req, res) => {
 });
 
 /* Routes */
-console.log("Upload routes loaded");
-app.use("/api", uploadRoutes);
+console.log("Gallery routes loaded");
+app.use("/api", galleryRoutes);
 
 /* Server Port */
 const PORT = 5000;
