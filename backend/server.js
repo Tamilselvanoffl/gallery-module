@@ -12,10 +12,12 @@ app.use(express.json());
 /* Serve uploaded images */
 app.use("/uploads", express.static("uploads"));
 
-/* MongoDB Connection */
-mongoose.connect("mongodb://127.0.0.1:27017/galleryDB")
-.then(()=>console.log("MongoDB Connected"))
-.catch(err=>console.log(err));
+/* MongoDB Connection 
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log("MongoDB Connected"))
+.catch(err => {
+  console.log("MongoDB connection failed");
+});*/
 
 /* Test route */
 app.get("/", (req, res) => {
