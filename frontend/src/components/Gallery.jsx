@@ -34,7 +34,7 @@ function Gallery() {
        <h4>{size.width} x {size.height}</h4>
 
        <img
-        src={`http://localhost:5000${size.path}`}
+        src={`https://gallery-module-backend.onrender.com${size.path}`}
         width="200"
         alt="resized"
        />
@@ -42,7 +42,7 @@ function Gallery() {
        <br />
 
        <a
-        href={`http://localhost:5000/api/download?path=${size.path}`}
+        href={`https://gallery-module-backend.onrender.com/api/download?path=${size.path}`}
         download
        >
         <button>Download</button>

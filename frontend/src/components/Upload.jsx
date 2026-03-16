@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = "https://gallery-module-backend.onrender.com";
+
 function Upload(){
 
  const [file,setFile] = useState(null);
@@ -18,11 +20,19 @@ function Upload(){
   const formData = new FormData();
   formData.append("image",file);
 
-  await axios.post("http://localhost:5000/api/upload",formData);
+  try{
 
-  alert("Image Uploaded");
+   await axios.post(`${BASE_URL}/api/upload`,formData);
 
-  navigate("/gallery");
+   alert("Image Uploaded");
+
+   navigate("/gallery");
+
+  }catch(err){
+
+   alert("Upload failed");
+
+  }
 
  };
 
@@ -37,7 +47,7 @@ function Upload(){
     onChange={(e)=>setFile(e.target.files[0])}
    />
 
-   <br/>
+   <br/><br/>
 
    <button onClick={uploadImage}>
     Upload
