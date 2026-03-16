@@ -6,6 +6,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 
 const galleryRoutes = require("./routes/galleryRoutes");
+app.use("/api", galleryRoutes);
 
 const app = express();
 
