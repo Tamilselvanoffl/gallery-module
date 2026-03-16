@@ -22,6 +22,7 @@ mongoose.connect(process.env.MONGO_URI)
 .then(()=>console.log("MongoDB Connected"))
 .catch(err=>console.log("MongoDB connection failed:", err.message));
 
+console.log("Gallery routes loaded");
 app.use("/api", galleryRoutes);
 
 const PORT = process.env.PORT || 5000;
