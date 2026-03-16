@@ -1,46 +1,30 @@
-require("dotenv").config();
-
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
+const router = express.Router();
 const path = require("path");
 
-const galleryRoutes = require("./routes/galleryRoutes");
+const upload = require("../middleware/upload");
+const { uploadImage } = require("../controllers/galleryController");
 
-const app = express();
+const Image = require("../models/Image");
 
-/* Enable CORS */
-app.use(
-  cors({
-    origin: "*"
-  })
-);
+/* Upload */
+router.post("/upload", upload.single("image"), uploadImage);
 
-/* Parse JSON */
-app.use(express.json());
-
-/* Serve uploaded images */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-/* Root route to test backend */
-app.get("/", (req, res) => {
-  res.send("Gallery Backend Running");
+/* Get images */
+router.get("/images", async (req, res) => {
+ try {
+   const images = await Image.find().sort({ createdAt: -1 });
+   res.json(images);
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+ }
 });
 
-/* MongoDB Connection */
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) =>
-    console.log("MongoDB connection failed:", err.message)
-  );
-
-/* API Routes */
-app.use("/api", galleryRoutes);
-
-/* Start Server */
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+/* Download */
+router.get("/download", (req, res) => {
+ const filePath = req.query.path;
+ const fullPath = path.join(__dirname, "..", filePath);
+ res.download(fullPath);
 });
+
+module.exports = router;
