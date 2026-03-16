@@ -1,15 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const BASE_URL = "https://gallery-module-backend.onrender.com";
+
 function Gallery() {
 
  const [images, setImages] = useState([]);
 
  const fetchImages = async () => {
 
-  const res = await axios.get("https://gallery-module-backend.onrender.com/api/images");
+  try {
 
-  setImages(res.data);
+   const res = await axios.get(`${BASE_URL}/api/images`);
+   setImages(res.data);
+
+  } catch (err) {
+
+   console.error(err);
+   alert("Failed to load images");
+
+  }
 
  };
 
@@ -27,14 +37,14 @@ function Gallery() {
 
     <div key={img._id}>
 
-     {img.sizes.map((size, i) => (
+     {img.sizes?.map((size, i) => (
 
       <div key={i} style={{ marginBottom: "20px" }}>
 
        <h4>{size.width} x {size.height}</h4>
 
        <img
-        src={`https://gallery-module-backend.onrender.com${size.path}`}
+        src={`${BASE_URL}${size.path}`}
         width="200"
         alt="resized"
        />
@@ -42,7 +52,7 @@ function Gallery() {
        <br />
 
        <a
-        href={`https://gallery-module-backend.onrender.com/api/download?path=${size.path}`}
+        href={`${BASE_URL}/api/download?path=${size.path}`}
         download
        >
         <button>Download</button>

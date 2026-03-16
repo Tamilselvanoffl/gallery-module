@@ -7,8 +7,7 @@ const BASE_URL = "https://gallery-module-backend.onrender.com";
 function Upload(){
 
  const [file,setFile] = useState(null);
-
- const navigate = useNavigate();
+ const navigate = useNavigate();   // ✅ missing line added
 
  const uploadImage = async()=>{
 
@@ -22,7 +21,10 @@ function Upload(){
 
   try{
 
-   await axios.post(`${BASE_URL}/api/upload`,formData);
+  await axios.post(
+  "https://gallery-module-backend.onrender.com/api/upload",
+  formData
+);
 
    alert("Image Uploaded");
 
@@ -30,6 +32,7 @@ function Upload(){
 
   }catch(err){
 
+   console.error(err);
    alert("Upload failed");
 
   }
