@@ -9,13 +9,10 @@ const galleryRoutes = require("./routes/galleryRoutes");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type"]
-  })
-);
+/* CORS MUST BE HERE */
+app.use(cors({
+  origin: "*"
+}));
 
 app.use(express.json());
 
