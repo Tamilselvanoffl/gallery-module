@@ -1,46 +1,34 @@
-require("dotenv").config();
+// require("dotenv").config();
 
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const mongoose = require("mongoose");
+// const express = require("express");
+// const cors = require("cors");
+// const mongoose = require("mongoose");
+// const path = require("path");
 
-const galleryRoutes = require("./routes/galleryRoutes");
+// const galleryRoutes = require("./routes/galleryRoutes");
 
-const app = express();
+// const app = express();
 
-/* Middleware */
-app.use(cors({ origin: "*" }));
-app.use(express.json());
+// app.use(cors({
+//   origin: "*",
+//   methods: ["GET","POST","PUT","DELETE"]
+// }));
+// app.use(express.json());
 
-/* Static folder for uploaded images */
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-/* Test Route */
-app.get("/", (req, res) => {
-res.send("Gallery Backend Running");
-});
+// mongoose.connect(process.env.MONGO_URI)
+// .then(()=>console.log("MongoDB Connected"))
+// .catch(err=>console.log("MongoDB connection failed:", err.message));
 
-/* MongoDB Connection */
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-console.log("MongoDB Connected");
-})
-.catch((err) => {
-console.log("MongoDB connection failed:", err.message);
-});
+// app.get("/", (req,res)=>{
+//  res.send("Gallery Backend Running");
+// });
 
-/* API Routes */
-app.use("/api", galleryRoutes);
+// app.use("/api", galleryRoutes);
 
-/* Handle unknown routes */
-app.use((req, res) => {
-res.status(404).json({ message: "Route not found" });
-});
+// const PORT = process.env.PORT || 5000;
 
-/* Start Server */
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, ()=>{
+//  console.log(`Server running on port ${PORT}`);
+// });
