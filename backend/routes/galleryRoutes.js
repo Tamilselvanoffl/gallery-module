@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
 
 const upload = require("../middleware/upload");
 const { uploadImage } = require("../controllers/galleryController");
@@ -8,11 +7,9 @@ const { uploadImage } = require("../controllers/galleryController");
 const Image = require("../models/Image");
 
 /* Upload */
-
 router.post("/upload", upload.single("image"), uploadImage);
 
-/* Get Images */
-
+/* Get images */
 router.get("/images", async (req, res) => {
 
  try {
@@ -23,27 +20,18 @@ router.get("/images", async (req, res) => {
 
  } catch (err) {
 
-   res.status(500).json({
-     error: err.message
-   });
+   res.status(500).json({ error: err.message });
 
  }
 
 });
 
 /* Download */
-
 router.get("/download", (req, res) => {
 
- const filePath = req.query.path;
+ const path = req.query.path;
 
- if (!filePath) {
-  return res.status(400).json({ message: "File path required" });
- }
-
- const fullPath = path.join(__dirname, "..", filePath);
-
- res.download(fullPath);
+ res.download("." + path);
 
 });
 
