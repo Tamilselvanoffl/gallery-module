@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const BASE_URL = "https://gallery-module-backend.onrender.com";
+const BASE_URL = "https://gallery-module.onrender.com";
 
 function Gallery() {
 
