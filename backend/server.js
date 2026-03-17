@@ -1,34 +1,38 @@
-// require("dotenv").config();
+require("dotenv").config();
 
-// const express = require("express");
-// const cors = require("cors");
-// const mongoose = require("mongoose");
-// const path = require("path");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const path = require("path");
 
-// const galleryRoutes = require("./routes/galleryRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
 
-// const app = express();
+const app = express();
 
-// app.use(cors({
-//   origin: "*",
-//   methods: ["GET","POST","PUT","DELETE"]
-// }));
-// app.use(express.json());
+app.use(cors({
+  origin: ["http://localhost:5173"],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
 
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.options("*", cors());
 
-// mongoose.connect(process.env.MONGO_URI)
-// .then(()=>console.log("MongoDB Connected"))
-// .catch(err=>console.log("MongoDB connection failed:", err.message));
+app.use(express.json());
 
-// app.get("/", (req,res)=>{
-//  res.send("Gallery Backend Running");
-// });
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// app.use("/api", galleryRoutes);
+mongoose.connect(process.env.MONGO_URI)
+.then(()=>console.log("MongoDB Connected"))
+.catch(err=>console.log("MongoDB connection failed:", err.message));
 
-// const PORT = process.env.PORT || 5000;
+app.get("/", (req,res)=>{
+ res.send("Gallery Backend Running");
+});
 
-// app.listen(PORT, ()=>{
-//  console.log(`Server running on port ${PORT}`);
-// });
+app.use("/api", galleryRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, ()=>{
+ console.log(`Server running on port ${PORT}`);
+});
