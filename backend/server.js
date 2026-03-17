@@ -26,6 +26,7 @@ app.get("/", (req, res) => {
   res.send("Gallery Backend Running");
 });
 
+console.log("MONGO URI:", process.env.MONGO_URI);
 /* ===== DATABASE ===== */
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
