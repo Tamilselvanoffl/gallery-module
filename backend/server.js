@@ -9,8 +9,8 @@ const galleryRoutes = require("./routes/galleryRoutes");
 
 const app = express();
 
-/* ===== CORS (FINAL FIX) ===== */
-app.use(cors()); // allow all origins (no CORS error)
+/* ===== CORS (FINAL WORKING) ===== */
+app.use(cors()); // allow all origins
 app.options("*", cors());
 
 console.log("✅ CORS ENABLED");
@@ -34,8 +34,9 @@ mongoose.connect(process.env.MONGO_URI)
 /* ===== ROUTES ===== */
 app.use("/api", galleryRoutes);
 
-/* ===== 404 ===== */
+/* ===== 404 HANDLER ===== */
 app.use((req, res) => {
+  console.log("❌ Route not found:", req.originalUrl);
   res.status(404).json({ message: "Route not found" });
 });
 
