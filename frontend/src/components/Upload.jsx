@@ -1,65 +1,45 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "https://gallery-module-backend.onrender.com";
+const BASE_URL = "https://gallery-module.onrender.com";
 
-function Upload(){
+function Upload() {
+  const [file, setFile] = useState(null);
 
- const [file,setFile] = useState(null);
- const navigate = useNavigate();   // ✅ missing line added
+  const uploadImage = async () => {
+    if (!file) return alert("Select a file");
 
- const uploadImage = async()=>{
+    const formData = new FormData();
+    formData.append("image", file);
 
-  if(!file){
-   alert("Please select image");
-   return;
-  }
+    try {
+      await axios.post(`${BASE_URL}/api/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-  const formData = new FormData();
-  formData.append("image",file);
+      alert("Upload successful ✅");
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed ❌");
+    }
+  };
 
-  try{
+  return (
+    <div>
+      <h2>Upload Image</h2>
 
-  await axios.post(
-  "https://gallery-module-backend.onrender.com/api/upload",
-  formData
-);
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
+      />
 
-   alert("Image Uploaded");
+      <br /><br />
 
-   navigate("/gallery");
-
-  }catch(err){
-
-   console.error(err);
-   alert("Upload failed");
-
-  }
-
- };
-
- return(
-
-  <div>
-
-   <h2>Upload Image</h2>
-
-   <input
-    type="file"
-    onChange={(e)=>setFile(e.target.files[0])}
-   />
-
-   <br/><br/>
-
-   <button onClick={uploadImage}>
-    Upload
-   </button>
-
-  </div>
-
- );
-
+      <button onClick={uploadImage}>Upload</button>
+    </div>
+  );
 }
 
 export default Upload;
