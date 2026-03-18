@@ -16,7 +16,6 @@ exports.uploadImage = async (req, res) => {
 
     const originalPath = req.file.path;
 
-    // ✅ ensure file exists
     if (!fs.existsSync(originalPath)) {
       return res.status(400).json({
         message: "Uploaded file not found on server"
@@ -25,22 +24,45 @@ exports.uploadImage = async (req, res) => {
 
     const resizedDir = "uploads/resized";
 
-    // ✅ create folder if not exists
     if (!fs.existsSync(resizedDir)) {
       fs.mkdirSync(resizedDir, { recursive: true });
     }
 
+    // 🔥 GET SIZES
     let sizes = await ImageSize.find();
 
-    // ✅ fallback if DB empty
     if (!sizes || sizes.length === 0) {
-      sizes = [
-        { width: 200, height: 200 },
-        { width: 400, height: 400 }
-      ];
+      sizes = [{ width: 300, height: 200 }];
     }
 
-    // ✅ PARALLEL PROCESSING (FAST)
+    // 🔥 DELETE OLD IMAGES (FILES + DB)
+    const oldImages = await Image.find();
+
+    for (const img of oldImages) {
+
+      // delete original file
+      if (img.original) {
+        const originalFile = img.original.replace("/", "");
+        if (fs.existsSync(originalFile)) {
+          fs.unlinkSync(originalFile);
+        }
+      }
+
+      // delete resized files
+      if (img.sizes) {
+        img.sizes.forEach(size => {
+          const filePath = size.path.replace("/", "");
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        });
+      }
+    }
+
+    // delete DB records
+    await Image.deleteMany({});
+
+    // 🔥 PROCESS IMAGE (FAST PARALLEL)
     const resizedImages = await Promise.all(
       sizes.map(async (size) => {
         const resizedPath =
@@ -48,6 +70,7 @@ exports.uploadImage = async (req, res) => {
 
         await sharp(originalPath)
           .resize(size.width, size.height)
+          .jpeg({ quality: 70 })
           .toFile(resizedPath);
 
         return {
@@ -58,9 +81,7 @@ exports.uploadImage = async (req, res) => {
       })
     );
 
-    // ❌ REMOVE THIS (was slowing everything)
-    // await Image.deleteMany({});
-
+    // 🔥 SAVE NEW IMAGE
     const image = new Image({
       original: `/${originalPath}`,
       sizes: resizedImages
