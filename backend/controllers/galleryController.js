@@ -8,12 +8,21 @@ const Image = require("../models/Image");
 exports.uploadImage = async (req, res) => {
 
  try {
+    console.log("FILE:", req.file);
 
   if (!req.file) {
    return res.status(400).json({ message: "No file uploaded" });
   }
 
+  console.log("Uploaded File:", req.file);
+
   const originalPath = req.file.path;
+
+  if (!fs.existsSync(originalPath)) {
+   return res.status(400).json({
+    message: "Uploaded file not found on server"
+   });
+  }
 
   const resizedDir = "uploads/resized";
 
@@ -23,7 +32,7 @@ exports.uploadImage = async (req, res) => {
 
   const sizes = await ImageSize.find();
 
-  if (sizes.length === 0) {
+  if (!sizes || sizes.length === 0) {
    return res.status(400).json({
     message: "No resize sizes found in ImageSize collection"
    });

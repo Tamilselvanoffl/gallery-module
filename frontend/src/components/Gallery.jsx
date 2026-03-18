@@ -1,65 +1,57 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const BASE_URL = "https://gallery-module.onrender.com";
+
 function Gallery() {
+  const [images, setImages] = useState([]);
 
- const [images, setImages] = useState([]);
+  const fetchImages = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/images`);
+      setImages(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to load images");
+    }
+  };
 
- const fetchImages = async () => {
+  useEffect(() => {
+    fetchImages();
+  }, []);
 
-  const res = await axios.get("http://localhost:5000/api/images");
+  return (
+    <div>
+      <h2>Resized Images</h2>
 
-  setImages(res.data);
+      {images.length === 0 && <p>No images found</p>}
 
- };
+      {images.map((img) => (
+        <div key={img._id}>
+          {img.sizes?.map((size, i) => {
+            const imageUrl = `${BASE_URL}${size.path.startsWith("/") ? "" : "/"}${size.path}`;
 
- useEffect(() => {
-  fetchImages();
- }, []);
+            return (
+              <div key={i} style={{ marginBottom: "20px" }}>
+                <h4>{size.width} x {size.height}</h4>
 
- return (
+                <img src={imageUrl} width="200" alt="resized" />
 
-  <div>
+                <br />
 
-   <h2>Resized Images</h2>
-
-   {images.map((img) => (
-
-    <div key={img._id}>
-
-     {img.sizes.map((size, i) => (
-
-      <div key={i} style={{ marginBottom: "20px" }}>
-
-       <h4>{size.width} x {size.height}</h4>
-
-       <img
-        src={`http://localhost:5000${size.path}`}
-        width="200"
-        alt="resized"
-       />
-
-       <br />
-
-       <a
-        href={`http://localhost:5000/api/download?path=${size.path}`}
-        download
-       >
-        <button>Download</button>
-       </a>
-
-      </div>
-
-     ))}
-
+                <a
+                  href={`${BASE_URL}/api/download?path=${size.path}`}
+                  download
+                >
+                  <button>Download</button>
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
-
-   ))}
-
-  </div>
-
- );
-
+  );
 }
 
 export default Gallery;
