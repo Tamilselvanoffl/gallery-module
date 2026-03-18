@@ -29,7 +29,8 @@ function Gallery() {
       {images.map((img) => (
         <div key={img._id}>
           {img.sizes?.map((size, i) => {
-            const imageUrl = `${BASE_URL}${size.path.startsWith("/") ? "" : "/"}${size.path}`;
+            const imageUrl =
+              `${BASE_URL}${size.path.startsWith("/") ? "" : "/"}${size.path}`;
 
             return (
               <div key={i} style={{ marginBottom: "20px" }}>
@@ -39,12 +40,14 @@ function Gallery() {
 
                 <br />
 
+                {/* ✅ FIXED DOWNLOAD */}
                 <a
-                  href={`${BASE_URL}/api/download?path=${size.path}`}
+                  href={`${BASE_URL}/api/download?path=${encodeURIComponent(size.path)}`}
                   download
                 >
                   <button>Download</button>
                 </a>
+
               </div>
             );
           })}
