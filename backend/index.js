@@ -11,7 +11,6 @@ const app = express();
 
 /* ===== CORS ===== */
 app.use(cors());
-app.options("*", cors());
 
 console.log("✅ CORS ENABLED");
 
